@@ -27,11 +27,13 @@ function stringMatcher(val: string, options: Matcher<string>) {
         if (matcher.includes(val)) {
           return callback(val);
         }
+
       // Set<string>
       } else if (matcher instanceof Set) {
         if (matcher.has(val)) {
           return callback(val);
         }
+
       // RegExp
       } else if (matcher instanceof RegExp) {
         const [match] = val.match(matcher) ?? [];
