@@ -15,19 +15,31 @@ function stringMatcher(val: string, options: Matcher<string>) {
     const option = options[i];
 
     // Break for default case, either function or no more options
-    if (typeof option === 'function' || option === undefined) {
+    if (!Array.isArray(option)) {
       break;
     }
 
     const [matcher, callback] = option;
 
-    // Regular Expression Matcher
-    if (matcher instanceof RegExp) {
-      const [match] = val.match(matcher) ?? [];
-      if (match) {
-        return callback(match);
+    if (typeof matcher === 'object') {
+      // Array<string>
+      if (Array.isArray(matcher)) {
+        if (matcher.includes(val)) {
+          return callback(val);
+        }
+      // Set<string>
+      } else if (matcher instanceof Set) {
+        if (matcher.has(val)) {
+          return callback(val);
+        }
+      // RegExp
+      } else if (matcher instanceof RegExp) {
+        const [match] = val.match(matcher) ?? [];
+        if (match) {
+          return callback(match);
+        }
       }
-    // String Comparison
+    // string
     } else if (matcher === val) {
       return callback(val);
     }

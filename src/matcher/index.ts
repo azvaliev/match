@@ -1,4 +1,5 @@
 import { MatchError } from './error';
+import numberMatcher from './number';
 import stringMatcher from './string';
 
 // Number comparisons
@@ -17,7 +18,16 @@ type ArrayWLast<T, L> = [...T[], L];
 
 export type Matcher<T> =
     T extends Maybe<string>
-      ? ArrayWLast<[string | RegExp, (_: string) => void], (_: string) => void>
+      ? ArrayWLast<
+      [
+        | string
+        | string[]
+        | Set<string>
+        | RegExp,
+        (_: string) => void,
+      ],
+      (_: string) => void
+      >
       : T extends Maybe<number>
         ? ArrayWLast<
         [
@@ -50,7 +60,11 @@ function matcher<T>(val: T, matcherOptions: Matcher<T>): void {
   // Check val type to determine matcher type to use
 
   if (typeof val === 'string') {
-    stringMatcher(val, matcherOptions as Matcher<string>);
+    return stringMatcher(val, matcherOptions as Matcher<string>);
+  }
+
+  if (typeof val === 'number') {
+    return numberMatcher(val, matcherOptions as Matcher<number>);
   }
 
   throw new MatchError({
