@@ -8,6 +8,7 @@
     "/dist"
   ],
   "scripts": {
+    "lint": "eslint",
     "test": "vitest"
   },
   "keywords": [],

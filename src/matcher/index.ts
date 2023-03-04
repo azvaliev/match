@@ -8,6 +8,12 @@ export type MatchLessThanNum = `<${number}`;
 export type MatchRangeNum = `${number}..${number}`;
 export type MatchIncRangeNum = `${number}..=${number}`;
 
+export type MatchNumberComparison =
+  | MatchGreaterThanNum
+  | MatchLessThanNum
+  | MatchRangeNum
+  | MatchIncRangeNum;
+
 export type Maybe<T> = T | null | undefined;
 
 /**
@@ -33,10 +39,8 @@ export type Matcher<T> =
         [
           | number
           | number[]
-          | MatchGreaterThanNum
-          | MatchLessThanNum
-          | MatchRangeNum
-          | MatchIncRangeNum,
+          | Set<number>
+          | MatchNumberComparison,
           (exact: number) => void,
         ],
         (_: T) => void
@@ -51,12 +55,12 @@ export type Matcher<T> =
 /**
   * Match a number using arrays, ranges, greater than or less than
 * */
-function matcher(val: number, matcherOptions: Matcher<number>): void;
+function match(val: number, matcherOptions: Matcher<number>): void;
 /**
   * Match a string using RegExp pattern matching or literals
 * */
-function matcher(val: string, matcherOptions: Matcher<string>): void;
-function matcher<T>(val: T, matcherOptions: Matcher<T>): void {
+function match(val: string, matcherOptions: Matcher<string>): void;
+function match<T>(val: T, matcherOptions: Matcher<T>): void {
   // Check val type to determine matcher type to use
 
   if (typeof val === 'string') {
@@ -73,4 +77,4 @@ function matcher<T>(val: T, matcherOptions: Matcher<T>): void {
   });
 }
 
-export { matcher };
+export { match };

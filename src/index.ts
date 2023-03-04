@@ -1,7 +1,7 @@
-import { matcher } from 'matcher';
+import { match } from 'matcher';
 
-export default matcher;
-export { matcher } from 'matcher';
+export default match;
+export { match as matcher } from 'matcher';
 export type {
   Matcher,
   Maybe,
