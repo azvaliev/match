@@ -1,9 +1,13 @@
 import type { Matcher } from '.';
+import { MatchError } from './error';
 
 function stringMatcher(val: string, options: Matcher<string>) {
   const defaultCase = options[options.length - 1];
   if (typeof defaultCase !== 'function') {
-    throw new Error('Missing Fallback Option');
+    throw new MatchError({
+      message: 'Missing string matcher default case',
+      status: MatchError.StatusCodes.MISSING_FALLBACK,
+    });
   }
 
   // Skip last option in for loop

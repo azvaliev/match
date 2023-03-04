@@ -1,3 +1,4 @@
+import { MatchError } from './error';
 import stringMatcher from './string';
 
 // Number comparisons
@@ -51,6 +52,11 @@ function matcher<T>(val: T, matcherOptions: Matcher<T>): void {
   if (typeof val === 'string') {
     stringMatcher(val, matcherOptions as Matcher<string>);
   }
+
+  throw new MatchError({
+    message: `Unable to match type ${typeof val}`,
+    status: MatchError.StatusCodes.UNSUPPORTED_TYPE,
+  });
 }
 
 export { matcher };
