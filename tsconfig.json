@@ -4,9 +4,9 @@
     "module": "commonjs",
     "rootDir": "./",
     "moduleResolution": "node",
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "paths": {
-      "@app/*": ["./*"]
+      "@app/*": ["src/*"]
     },
     "outDir": "./dist",
     "removeComments": false,
@@ -28,6 +28,6 @@
     "skipLibCheck": true
   },
   "include": [
-    "src/**/*"
+    "./**/*"
   ]
 }

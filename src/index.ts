@@ -1,7 +1,4 @@
-import { match } from 'matcher';
-
-export default match;
-export { match as matcher } from 'matcher';
+export { match } from '@app/matcher';
 export type {
   Matcher,
   Maybe,
@@ -9,8 +6,8 @@ export type {
   MatchLessThanNum,
   MatchRangeNum,
   MatchIncRangeNum,
-} from 'matcher';
+} from '@app/matcher';
 
 export {
   MatchError,
-} from 'matcher/error';
+} from '@app/matcher/error';

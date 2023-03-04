@@ -1,49 +1,48 @@
-import type { Matcher, MatchNumberComparison } from '.';
-import { MatchError } from './error';
+import type { Matcher, MatchNumberComparison } from '@app/matcher';
+import { MatchError } from '@app/matcher/error';
+import { getDefaultHandler } from '@app/matcher/utils';
 
-function numberMatcher(val: number, options: Matcher<number>) {
-  const defaultCase = options[options.length - 1];
-  if (typeof defaultCase !== 'function') {
-    throw new Error('Missing Fallback Option');
-  }
+function numberMatcher(val: number, matchOptions: Matcher<number>) {
+  const defaultMatchHandler = getDefaultHandler<number>(matchOptions);
 
-  for (let i = 0; i < options.length; i += 1) {
-    const option = options[i];
-    if (!Array.isArray(option)) {
+  for (let i = 0; i < matchOptions.length; i += 1) {
+    const matchOption = matchOptions[i];
+    if (!Array.isArray(matchOption)) {
       break;
     }
 
-    const [matcher, callback] = option;
+    const [pattern, matchHandler] = matchOption;
 
     // number
-    if (typeof matcher === 'number') {
-      if (matcher === val) {
-        return callback(val);
+    if (typeof pattern === 'number') {
+      if (pattern === val) {
+        return matchHandler(val);
       }
-    } else if (typeof matcher === 'object') {
+    } else if (typeof pattern === 'object') {
       // number[]
-      if (Array.isArray(matcher)) {
-        if (matcher.includes(val)) {
-          return callback(val);
+      if (Array.isArray(pattern)) {
+        if (pattern.includes(val)) {
+          return matchHandler(val);
         }
       // Set<number>
-      } else if (matcher instanceof Set) {
-        if (matcher.has(val)) {
-          return callback(val);
+      } else if (pattern instanceof Set) {
+        if (pattern.has(val)) {
+          return matchHandler(val);
         }
       }
     } else {
-      const matched = parseAndEvaluateNumberComparison(matcher, val);
+      const matched = parseAndEvaluateNumberComparison(pattern, val);
 
       if (matched) {
-        callback(val);
+        matchHandler(val);
       }
     }
   }
 
-  return defaultCase(val);
+  return defaultMatchHandler(val);
 }
 
+export { numberMatcher };
 export default numberMatcher;
 
 /**
