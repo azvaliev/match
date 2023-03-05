@@ -7,7 +7,7 @@ enum StatusCodes {
   /**
     * Matcher requires a default case, and if it is missing this error will be thrown
   * */
-  MISSING_FALLBACK,
+  MISSING_DEFAULT_HANDLER,
   /**
     * Recieved a malformed/invalid matcher (ex: '<>600' for a number matcher)
   * */

@@ -9,7 +9,7 @@ function getDefaultHandler<T>(matcherOptions: Matcher<T>): MatcherDefaultHandler
   if (typeof defaultCase !== 'function') {
     throw new MatchError({
       message: 'Missing Default Case',
-      status: MatchError.StatusCodes.MISSING_FALLBACK,
+      status: MatchError.StatusCodes.MISSING_DEFAULT_HANDLER,
     });
   }
 

@@ -78,7 +78,7 @@ describe.concurrent('Throws the correct errors with invalid arguments', () => {
     expect(error?.status).toBe(MatchError.StatusCodes.UNSUPPORTED_TYPE);
   });
 
-  it('MISSING_FALLBACK error when no array with default handler is provided', ({ expect }) => {
+  it('MISSING_DEFAULT_HANDLER error when no array with default handler is provided', ({ expect }) => {
     let error: MatchError | undefined;
 
     try {
@@ -92,10 +92,10 @@ describe.concurrent('Throws the correct errors with invalid arguments', () => {
 
     expect(error).toBeDefined();
     expect(error?.message).toBeDefined();
-    expect(error?.status).toBe(MatchError.StatusCodes.MISSING_FALLBACK);
+    expect(error?.status).toBe(MatchError.StatusCodes.MISSING_DEFAULT_HANDLER);
   });
 
-  it('MISSING_FALLBACK error when empty array with no default handler is provided', ({ expect }) => {
+  it('MISSING_DEFAULT_HANDLER error when empty array with no default handler is provided', ({ expect }) => {
     let error: MatchError | undefined;
 
     try {
@@ -109,7 +109,7 @@ describe.concurrent('Throws the correct errors with invalid arguments', () => {
 
     expect(error).toBeDefined();
     expect(error?.message).toBeDefined();
-    expect(error?.status).toBe(MatchError.StatusCodes.MISSING_FALLBACK);
+    expect(error?.status).toBe(MatchError.StatusCodes.MISSING_DEFAULT_HANDLER);
   });
 
   it('MISSING_FALLBACK error when array with invalid default handler is provided', ({ expect }) => {
@@ -126,6 +126,6 @@ describe.concurrent('Throws the correct errors with invalid arguments', () => {
 
     expect(error).toBeDefined();
     expect(error?.message).toBeDefined();
-    expect(error?.status).toBe(MatchError.StatusCodes.MISSING_FALLBACK);
+    expect(error?.status).toBe(MatchError.StatusCodes.MISSING_DEFAULT_HANDLER);
   });
 });
