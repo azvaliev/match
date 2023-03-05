@@ -7,6 +7,7 @@ export default defineConfig({
     useAtomics: true,
     reporters: ['html', 'verbose'],
     watch: false,
+    include: ['**/*.test.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
     alias: {
       '@app': path.resolve(__dirname, './src'),
     },

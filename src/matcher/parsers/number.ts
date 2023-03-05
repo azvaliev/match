@@ -5,7 +5,7 @@ import { getDefaultHandler } from '@app/matcher/utils';
 function numberMatcher(val: number, matchOptions: Matcher<number>) {
   const defaultMatchHandler = getDefaultHandler<number>(matchOptions);
 
-  for (let i = 0; i < matchOptions.length; i += 1) {
+  for (let i = 0; i < matchOptions.length - 1; i += 1) {
     const matchOption = matchOptions[i];
     if (!Array.isArray(matchOption)) {
       break;
@@ -34,7 +34,7 @@ function numberMatcher(val: number, matchOptions: Matcher<number>) {
       const matched = parseAndEvaluateNumberComparison(pattern, val);
 
       if (matched) {
-        matchHandler(val);
+        return matchHandler(val);
       }
     }
   }
@@ -57,7 +57,7 @@ function parseAndEvaluateNumberComparison(matcher: MatchNumberComparison, val: n
     return val < parseFloat(matcher.slice(1));
   }
 
-  let parserPosition = 0;
+  let parserPosition = 1;
   let rawRangeStart = '';
 
   // While next two characters are not .. which would indicate middle of range
