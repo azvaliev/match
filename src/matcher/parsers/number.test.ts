@@ -230,4 +230,40 @@ describe('Bad input / Error Handling', () => {
     expect(console.error).toHaveBeenCalledOnce();
     expect(error?.current?.status).toBe(MatchError.StatusCodes.BAD_MATCHER);
   });
+
+  it('range string missing ..', ({ expect }) => {
+    const x = getRandomNumber({ high: testValue.current });
+
+    // @ts-expect-error missing ..
+    numberMatcher(testValue.current, [
+      [`${x}${testValue.current + 20}`, matchHandler],
+      defaultHandler,
+    ]);
+
+    expect(matchHandler).not.toHaveBeenCalled();
+
+    expect(defaultHandler).toHaveBeenCalledOnce();
+    expect(defaultHandler).toHaveBeenCalledWith(testValue.current);
+
+    expect(console.error).toHaveBeenCalledOnce();
+    expect(error?.current?.status).toBe(MatchError.StatusCodes.BAD_MATCHER);
+  });
+
+  it('range string ending with NaN', ({ expect }) => {
+    const x = getRandomNumber({ high: testValue.current });
+
+    // @ts-expect-error characters after .. is not valid number
+    numberMatcher(testValue.current, [
+      [`${x}..=h8%E4`, matchHandler],
+      defaultHandler,
+    ]);
+
+    expect(matchHandler).not.toHaveBeenCalled();
+
+    expect(defaultHandler).toHaveBeenCalledOnce();
+    expect(defaultHandler).toHaveBeenCalledWith(testValue.current);
+
+    expect(console.error).toHaveBeenCalledOnce();
+    expect(error?.current?.status).toBe(MatchError.StatusCodes.BAD_MATCHER);
+  });
 });
