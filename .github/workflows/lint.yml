@@ -1,4 +1,4 @@
-name: ESLint
+name: lint
 
 on:
   push:
@@ -10,9 +10,6 @@ jobs:
   eslint:
     name: Run
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      security-events: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -51,7 +48,4 @@ jobs:
           --config .eslintrc.yaml
           --ext .js,.jsx,.ts,.tsx
         continue-on-error: true
-
-
-
 
