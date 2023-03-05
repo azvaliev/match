@@ -18,6 +18,10 @@ function numberMatcher(val: number, matchOptions: Matcher<number>) {
       if (pattern === val) {
         return matchHandler(val);
       }
+      // handle NaN
+      if (Number.isNaN(pattern) && Number.isNaN(val)) {
+        return matchHandler(val);
+      }
     } else if (typeof pattern === 'object') {
       // number[]
       if (Array.isArray(pattern)) {
@@ -31,10 +35,14 @@ function numberMatcher(val: number, matchOptions: Matcher<number>) {
         }
       }
     } else {
-      const matched = parseAndEvaluateNumberComparison(pattern, val);
+      try {
+        const matched = parseAndEvaluateNumberComparison(pattern, val);
 
-      if (matched) {
-        return matchHandler(val);
+        if (matched) {
+          return matchHandler(val);
+        }
+      } catch (err) {
+        console.error(err);
       }
     }
   }
