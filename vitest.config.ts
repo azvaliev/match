@@ -5,7 +5,7 @@ export default defineConfig({
   test: {
     dir: 'src',
     useAtomics: true,
-    reporters: ['default', 'html'],
+    reporters: ["default", 'html'],
     alias: {
       '@app': path.resolve(__dirname, './src'),
     },
