@@ -57,7 +57,7 @@ function parseAndEvaluateNumberComparison(matcher: MatchNumberComparison, val: n
     return val < parseFloat(matcher.slice(1));
   }
 
-  let parserPosition = 1;
+  let parserPosition = 0;
   let rawRangeStart = '';
 
   // While next two characters are not .. which would indicate middle of range

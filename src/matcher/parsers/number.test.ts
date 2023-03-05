@@ -120,4 +120,28 @@ describe('Matching numbers with comparison', () => {
     expect(matchHandler).toHaveBeenCalled();
     expect(matchHandler).toHaveBeenCalledWith(testValue.current);
   });
+
+  it('between X and Y, non inclusive of Y', ({ expect }) => {
+    numberMatcher(testValue.current, [
+      [`${x}..${y}`, matchHandler],
+      defaultHandler,
+    ]);
+
+    expect(defaultHandler).not.toHaveBeenCalled();
+
+    expect(matchHandler).toHaveBeenCalled();
+    expect(matchHandler).toHaveBeenCalledWith(testValue.current);
+  });
+
+  it('between X and Y, inclusive of Y', ({ expect }) => {
+    numberMatcher(y, [
+      [`${x}..=${y}`, matchHandler],
+      defaultHandler,
+    ]);
+
+    expect(defaultHandler).not.toHaveBeenCalled();
+
+    expect(matchHandler).toHaveBeenCalled();
+    expect(matchHandler).toHaveBeenCalledWith(y);
+  });
 });
