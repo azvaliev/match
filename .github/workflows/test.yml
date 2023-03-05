@@ -42,3 +42,6 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
+
+      - name: Run Vitest
+        run: pnpm test
