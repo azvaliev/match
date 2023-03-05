@@ -1,23 +1,30 @@
-import { describe, it, vi } from 'vitest';
+import {
+  beforeEach, describe, it,
+} from 'vitest';
 
 import { match } from '.';
 import { MatchError } from './error';
+import { getRandomNumber, getRandomString, setupHandlersAndTestValue } from './parsers/utils.spec';
 
-describe.concurrent('Executes the correct matcher type', () => {
+describe('Executes the correct matcher type', () => {
+  const {
+    testValue,
+    matchHandler,
+    defaultHandler,
+    beforeEachCleanup,
+  } = setupHandlersAndTestValue(getRandomString);
+
+  beforeEach(beforeEachCleanup);
+
   it('Default catch all for strings', ({ expect }) => {
-    const testString = 'hello world';
-
-    const defaultHandler = vi.fn();
-    match(testString, [defaultHandler]);
+    match(testValue.current, [defaultHandler]);
 
     expect(defaultHandler).toHaveBeenCalledOnce();
-    expect(defaultHandler).toHaveBeenCalledWith(testString);
+    expect(defaultHandler).toHaveBeenCalledWith(testValue.current);
   });
 
   it('Default catch all for numbers', ({ expect }) => {
-    const testNumber = 45;
-
-    const defaultHandler = vi.fn();
+    const testNumber = getRandomNumber();
 
     match(testNumber, [defaultHandler]);
 
@@ -26,41 +33,33 @@ describe.concurrent('Executes the correct matcher type', () => {
   });
 
   it('Can match strings', ({ expect }) => {
-    const testString = 'bar bazz';
-
-    const matchSuccessHandler = vi.fn();
-    const defaultHandler = vi.fn();
-
-    match(testString, [
-      [testString, matchSuccessHandler],
+    match(testValue.current, [
+      [testValue.current, matchHandler],
       defaultHandler,
     ]);
 
     expect(defaultHandler).not.toHaveBeenCalled();
 
-    expect(matchSuccessHandler).toHaveBeenCalledOnce();
-    expect(matchSuccessHandler).toHaveBeenCalledWith(testString);
+    expect(matchHandler).toHaveBeenCalledOnce();
+    expect(matchHandler).toHaveBeenCalledWith(testValue.current);
   });
 
   it('Can match numbers', ({ expect }) => {
-    const testNumber = 45;
-
-    const matchSuccessHandler = vi.fn();
-    const defaultHandler = vi.fn();
+    const testNumber = getRandomNumber();
 
     match(testNumber, [
-      [testNumber, matchSuccessHandler],
+      [testNumber, matchHandler],
       defaultHandler,
     ]);
 
     expect(defaultHandler).not.toHaveBeenCalled();
 
-    expect(matchSuccessHandler).toHaveBeenCalledOnce();
-    expect(matchSuccessHandler).toHaveBeenCalledWith(testNumber);
+    expect(matchHandler).toHaveBeenCalledOnce();
+    expect(matchHandler).toHaveBeenCalledWith(testNumber);
   });
 });
 
-describe.concurrent('Throws the correct errors with invalid arguments', () => {
+describe('Throws the correct errors with invalid arguments', () => {
   it('UNSUPPORTED_TYPE error when undefined required arguments are passed in', ({ expect }) => {
     let error: MatchError | undefined;
 
@@ -78,12 +77,19 @@ describe.concurrent('Throws the correct errors with invalid arguments', () => {
     expect(error?.status).toBe(MatchError.StatusCodes.UNSUPPORTED_TYPE);
   });
 
+  const {
+    testValue,
+    beforeEachCleanup,
+  } = setupHandlersAndTestValue(getRandomString);
+
+  beforeEach(beforeEachCleanup);
+
   it('MISSING_DEFAULT_HANDLER error when no array with default handler is provided', ({ expect }) => {
     let error: MatchError | undefined;
 
     try {
       // @ts-expect-error intentionally omitting required handler argument
-      match('TEST STRING');
+      match(testValue.current);
     } catch (err) {
       if (err instanceof MatchError) {
         error = err;
@@ -100,7 +106,7 @@ describe.concurrent('Throws the correct errors with invalid arguments', () => {
 
     try {
       // @ts-expect-error intentionally omitting required handler argument
-      match('TEST STRING', []);
+      match(testValue.current, []);
     } catch (err) {
       if (err instanceof MatchError) {
         error = err;
@@ -117,7 +123,7 @@ describe.concurrent('Throws the correct errors with invalid arguments', () => {
 
     try {
       // @ts-expect-error intentionally giving wrong type for handler argument
-      match(69, [{}]);
+      match(getRandomNumber(), [{}]);
     } catch (err) {
       if (err instanceof MatchError) {
         error = err;

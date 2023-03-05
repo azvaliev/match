@@ -2,32 +2,9 @@ import {
   afterEach,
   beforeEach, describe, it,
 } from 'vitest';
-import { captureMatchErrors, setupHandlersAndTestValue } from './utils.spec';
+import { captureMatchErrors, getRandomNumber, setupHandlersAndTestValue } from './utils.spec';
 import { numberMatcher } from './number';
 import { MatchError } from '../error';
-
-type GetRandomNumberOptions = {
-  low?: number;
-  high?: number;
-  round?: boolean;
-};
-
-function getRandomNumber(partialOptions?: GetRandomNumberOptions): number;
-function getRandomNumber(partialOptions = {}) {
-  const options: Required<GetRandomNumberOptions> = {
-    low: -10000,
-    high: 10000,
-    round: false,
-    ...partialOptions,
-  };
-
-  const random = (Math.random() * (options.high - options.low)) + options.low;
-
-  if (options.round) {
-    return Math.round(random);
-  }
-  return random;
-}
 
 describe.concurrent('Directly matching number to values', () => {
   const {
