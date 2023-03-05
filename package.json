@@ -8,7 +8,7 @@
     "/dist"
   ],
   "scripts": {
-    "lint": "eslint src --config .eslintrc.yaml --ext .js,.ts",
+    "lint": "eslint . --config .eslintrc.yaml --ext .js,.ts",
     "test": "vitest",
     "test:ui": "vitest --ui"
   },
