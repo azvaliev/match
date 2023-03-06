@@ -1,12 +1,14 @@
 import {
   afterEach,
-  beforeEach, describe, it,
+  beforeEach,
+  describe,
+  it,
 } from 'vitest';
 import { captureMatchErrors, getRandomNumber, setupHandlersAndTestValue } from './utils.spec';
 import { numberMatcher } from './number';
 import { MatchError } from '../error';
 
-describe.concurrent('Directly matching number to values', () => {
+describe('Directly matching number to values', () => {
   const {
     testValue,
     matchHandler,
@@ -59,7 +61,7 @@ describe.concurrent('Directly matching number to values', () => {
   });
 });
 
-describe.concurrent('Matching numbers with comparison', () => {
+describe('Matching numbers with comparison', () => {
   let x = getRandomNumber({ high: 0 });
   let y = getRandomNumber({ low: 0 });
 

@@ -6,7 +6,7 @@ import { match } from '.';
 import { MatchError } from './error';
 import { getRandomNumber, getRandomString, setupHandlersAndTestValue } from './parsers/utils.spec';
 
-describe('Executes the correct matcher type', () => {
+describe('Fundamental Behavior', () => {
   const {
     testValue,
     matchHandler,
@@ -16,23 +16,14 @@ describe('Executes the correct matcher type', () => {
 
   beforeEach(beforeEachCleanup);
 
-  it('Default catch all for strings', ({ expect }) => {
+  it('Can execute default catch all', ({ expect }) => {
     match(testValue.current, [defaultHandler]);
 
     expect(defaultHandler).toHaveBeenCalledOnce();
     expect(defaultHandler).toHaveBeenCalledWith(testValue.current);
   });
 
-  it('Default catch all for numbers', ({ expect }) => {
-    const testNumber = getRandomNumber();
-
-    match(testNumber, [defaultHandler]);
-
-    expect(defaultHandler).toHaveBeenCalledOnce();
-    expect(defaultHandler).toHaveBeenCalledWith(testNumber);
-  });
-
-  it('Can match strings', ({ expect }) => {
+  it('Can match literals', ({ expect }) => {
     match(testValue.current, [
       [testValue.current, matchHandler],
       defaultHandler,
@@ -44,18 +35,30 @@ describe('Executes the correct matcher type', () => {
     expect(matchHandler).toHaveBeenCalledWith(testValue.current);
   });
 
-  it('Can match numbers', ({ expect }) => {
-    const testNumber = getRandomNumber();
+  it('Executes fallback catch all when no matches', ({ expect }) => {
+    match(testValue.current, [
+      [getRandomString(), matchHandler],
+      defaultHandler,
+    ]);
 
-    match(testNumber, [
-      [testNumber, matchHandler],
+    expect(matchHandler).not.toHaveBeenCalled();
+
+    expect(defaultHandler).toHaveBeenCalledOnce();
+    expect(defaultHandler).toHaveBeenCalledWith(testValue.current);
+  });
+
+  it('Returns first match', ({ expect }) => {
+    match(testValue.current, [
+      [getRandomString(), defaultHandler],
+      [testValue.current, matchHandler],
+      [testValue.current, matchHandler],
       defaultHandler,
     ]);
 
     expect(defaultHandler).not.toHaveBeenCalled();
 
     expect(matchHandler).toHaveBeenCalledOnce();
-    expect(matchHandler).toHaveBeenCalledWith(testNumber);
+    expect(matchHandler).toHaveBeenCalledWith(testValue.current);
   });
 });
 

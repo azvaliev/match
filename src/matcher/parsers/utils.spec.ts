@@ -27,24 +27,57 @@ function getRandomNumber(partialOptions = {}) {
 type CreateRandomStringOptions = {
   min: number;
   max: number;
+  /**
+    * If false, will only use a-zA-Z
+    * @default true
+  * */
+  allowSpecialCharacters: boolean;
 };
 
 function getRandomString(partialOptions?: Partial<CreateRandomStringOptions>): string;
 function getRandomString(partialOptions = {}) {
-  const options: CreateRandomStringOptions = {
+  const { min, max, allowSpecialCharacters }: CreateRandomStringOptions = {
     min: 12,
     max: 32,
+    allowSpecialCharacters: true,
     ...partialOptions,
   };
 
-  const length = getRandomNumber({ low: options.min, high: options.max, round: true });
+  const length = getRandomNumber({ low: min, high: max, round: true });
 
   return Array
     .from(
       { length },
-      () => String.fromCharCode(
-        getRandomNumber({ low: 32, high: 126, round: true }),
-      ),
+      () => {
+        let randomCharCode: number;
+
+        // If no special characters, 50% chance for lowercase
+        if (!allowSpecialCharacters && Math.random() > 0.5) {
+          randomCharCode = getRandomNumber({
+            low: 97,
+            high: 122,
+            round: true,
+          });
+
+        // If no special characters, 50% chance for uppercase
+        } else if (!allowSpecialCharacters) {
+          randomCharCode = getRandomNumber({
+            low: 65,
+            high: 90,
+            round: true,
+          });
+
+        // Default include special characters
+        } else {
+          randomCharCode = getRandomNumber({
+            low: 32,
+            high: 126,
+            round: true,
+          });
+        }
+
+        return String.fromCharCode(randomCharCode);
+      },
     )
     .join('');
 }
