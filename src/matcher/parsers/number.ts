@@ -2,7 +2,9 @@ import type { Matcher, MatchNumberComparison } from '@app/matcher';
 import { MatchError } from '@app/matcher/error';
 import { getDefaultHandler } from '@app/matcher/utils';
 
-function numberMatcher(val: number, matchOptions: Matcher<number>) {
+function numberMatcher<
+  MatchReturnType,
+>(val: number, matchOptions: Matcher<number, MatchReturnType>): MatchReturnType {
   const defaultMatchHandler = getDefaultHandler<number>(matchOptions);
 
   for (let i = 0; i < matchOptions.length - 1; i += 1) {

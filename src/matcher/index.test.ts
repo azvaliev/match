@@ -47,7 +47,7 @@ describe('Fundamental Behavior', () => {
     expect(defaultHandler).toHaveBeenCalledWith(testValue.current);
   });
 
-  it('Returns first match', ({ expect }) => {
+  it('Executes first match callback', ({ expect }) => {
     match(testValue.current, [
       [getRandomString(), defaultHandler],
       [testValue.current, matchHandler],
@@ -59,6 +59,23 @@ describe('Fundamental Behavior', () => {
 
     expect(matchHandler).toHaveBeenCalledOnce();
     expect(matchHandler).toHaveBeenCalledWith(testValue.current);
+  });
+
+  it('Forwards match callback return value', ({ expect }) => {
+    const expectedReturnValue = [testValue.current, getRandomString()];
+    matchHandler.mockReturnValueOnce(expectedReturnValue);
+
+    const res = match(testValue.current, [
+      [testValue.current, matchHandler],
+      defaultHandler,
+    ]);
+
+    expect(defaultHandler).not.toHaveBeenCalled();
+
+    expect(matchHandler).toHaveBeenCalledOnce();
+    expect(matchHandler).toHaveBeenCalledWith(testValue.current);
+
+    expect(res).toBe(expectedReturnValue);
   });
 });
 

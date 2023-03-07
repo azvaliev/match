@@ -18,34 +18,37 @@ export type Maybe<T> = T | null | undefined;
  */
 type ArrayWLast<T, L> = [...T[], L];
 
-export type MatcherDefaultHandler<T> = (arg0: T) => void;
+export type MatcherDefaultHandler<
+  MatchType,
+  MatchReturnType,
+> = (arg0: MatchType) => MatchReturnType;
 
-export type Matcher<T> =
-    T extends Maybe<string>
+export type Matcher<MatchType, MatchReturnType> =
+    MatchType extends Maybe<string>
       ? ArrayWLast<
       [
         | string
         | string[]
         | Set<string>
         | RegExp,
-        (_: string) => void,
+        (_: string) => MatchReturnType,
       ],
-      MatcherDefaultHandler<T>
+      MatcherDefaultHandler<MatchType, MatchReturnType>
       >
-      : T extends Maybe<number>
+      : MatchType extends Maybe<number>
         ? ArrayWLast<
         [
           | number
           | number[]
           | Set<number>
           | MatchNumberComparison,
-          (exact: number) => void,
+          (exact: number) => MatchReturnType,
         ],
-        MatcherDefaultHandler<T>
+        MatcherDefaultHandler<MatchType, MatchReturnType>
         >
-        : T extends Maybe<boolean>
+        : MatchType extends Maybe<boolean>
           ? ArrayWLast<(
             [true, (exact: true) => void] |
             [false, (exact: false) => void]
-          ), MatcherDefaultHandler<T>>
+          ), MatcherDefaultHandler<MatchType, MatchReturnType>>
           : never;

@@ -1,7 +1,9 @@
 import type { Matcher } from '@app/matcher';
 import { getDefaultHandler } from '@app/matcher/utils';
 
-function stringMatcher(val: string, matchOptions: Matcher<string>) {
+function stringMatcher<
+  MatchReturnType,
+>(val: string, matchOptions: Matcher<string, MatchReturnType>): MatchReturnType {
   const defaultMatchHandler = getDefaultHandler<string>(matchOptions);
 
   // Skip last option in for loop
