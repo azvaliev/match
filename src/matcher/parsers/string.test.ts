@@ -158,3 +158,25 @@ describe('Matching strings using Regular Expressions', () => {
     expect(matchHandler).toHaveBeenCalledWith(testValue.current);
   });
 });
+
+describe('Bad input / Error Handling', () => {
+  const {
+    testValue,
+    // matchHandler,
+    defaultHandler,
+    beforeEachCleanup,
+  } = setupHandlersAndTestValue(getRandomString);
+
+  beforeEach(beforeEachCleanup);
+
+  it('invalid match option', ({ expect }) => {
+    // @ts-expect-error it is invalid to pass null here
+    stringMatcher(testValue.current, [
+      null,
+      defaultHandler,
+    ]);
+
+    expect(defaultHandler).toHaveBeenCalled();
+    expect(defaultHandler).toHaveBeenCalledWith(testValue.current);
+  });
+});
