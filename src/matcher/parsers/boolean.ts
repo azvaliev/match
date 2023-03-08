@@ -5,7 +5,7 @@ function booleanMatcher<
   MatchReturnType,
 >(val: boolean, matchOptions: Matcher<boolean, MatchReturnType>): MatchReturnType {
   // Skip last option in for loop
-  for (let i = 0; i < matchOptions.length - 1; i += 1) {
+  for (let i = 0; i < matchOptions.length; i += 1) {
     const matchOption = matchOptions[i];
 
     // Break for default case, either function or no more options

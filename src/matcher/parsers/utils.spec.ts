@@ -1,6 +1,10 @@
 import { vi } from 'vitest';
 import { MatchError } from '../error';
 
+function getRandomBoolean(): boolean {
+  return Math.random() > 0.5;
+}
+
 type GetRandomNumberOptions = {
   low: number;
   high: number;
@@ -127,5 +131,6 @@ export {
   captureMatchErrors,
   getRandomNumber,
   getRandomString,
+  getRandomBoolean,
   setupHandlersAndTestValue,
 };
