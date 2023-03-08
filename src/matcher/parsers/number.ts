@@ -5,7 +5,7 @@ import { getDefaultHandler } from '@app/matcher/utils';
 function numberMatcher<
   MatchReturnType,
 >(val: number, matchOptions: Matcher<number, MatchReturnType>): MatchReturnType {
-  const defaultMatchHandler = getDefaultHandler<number>(matchOptions);
+  const defaultMatchHandler = getDefaultHandler<number, MatchReturnType>(matchOptions);
 
   for (let i = 0; i < matchOptions.length - 1; i += 1) {
     const matchOption = matchOptions[i];
@@ -53,7 +53,7 @@ function numberMatcher<
 }
 
 export { numberMatcher };
-export default numberMatcher;
+export default {};
 
 /**
   * Parse a string like '>60' | '<120' | '20..45' | '80..=20'

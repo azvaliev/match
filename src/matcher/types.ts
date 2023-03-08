@@ -46,9 +46,19 @@ export type Matcher<MatchType, MatchReturnType> =
         ],
         MatcherDefaultHandler<MatchType, MatchReturnType>
         >
-        : MatchType extends Maybe<boolean>
-          ? ArrayWLast<(
+        : MatchType extends boolean
+          ? (
+            ArrayWLast<(
+              [true, (exact: true) => void] |
+              [false, (exact: false) => void]
+            ), MatcherDefaultHandler<MatchType, MatchReturnType>>
+          ) | (
             [true, (exact: true) => void] |
             [false, (exact: false) => void]
-          ), MatcherDefaultHandler<MatchType, MatchReturnType>>
-          : never;
+          )
+          : MatchType extends Maybe<boolean>
+            ? ArrayWLast<(
+              [true, (exact: true) => void] |
+              [false, (exact: false) => void]
+            ), MatcherDefaultHandler<MatchType, MatchReturnType>>
+            : never;

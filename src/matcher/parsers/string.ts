@@ -4,7 +4,7 @@ import { getDefaultHandler } from '@app/matcher/utils';
 function stringMatcher<
   MatchReturnType,
 >(val: string, matchOptions: Matcher<string, MatchReturnType>): MatchReturnType {
-  const defaultMatchHandler = getDefaultHandler<string>(matchOptions);
+  const defaultMatchHandler = getDefaultHandler<string, MatchReturnType>(matchOptions);
 
   // Skip last option in for loop
   for (let i = 0; i < matchOptions.length - 1; i += 1) {
@@ -47,4 +47,4 @@ function stringMatcher<
 }
 
 export { stringMatcher };
-export default stringMatcher;
+export default {};

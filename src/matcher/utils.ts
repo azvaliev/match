@@ -4,7 +4,12 @@ import { MatchError } from './error';
 /**
   * Gets default matcher case, or throws
 * */
-function getDefaultHandler<T>(matcherOptions: Matcher<T>): MatcherDefaultHandler<T> {
+function getDefaultHandler<
+  MatchType,
+  MatchReturnType,
+>(
+  matcherOptions: Matcher<MatchType, MatchReturnType>,
+): MatcherDefaultHandler<MatchType, MatchReturnType> {
   const defaultCase = matcherOptions?.[matcherOptions.length - 1];
   if (typeof defaultCase !== 'function') {
     throw new MatchError({
@@ -13,7 +18,7 @@ function getDefaultHandler<T>(matcherOptions: Matcher<T>): MatcherDefaultHandler
     });
   }
 
-  return defaultCase;
+  return defaultCase as MatcherDefaultHandler<MatchType, MatchReturnType>;
 }
 
 export {
