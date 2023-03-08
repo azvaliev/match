@@ -23,6 +23,9 @@ export type MatcherDefaultHandler<
   MatchReturnType,
 > = (arg0: MatchType) => MatchReturnType;
 
+type BooleanTrueCase<MatchReturnType> = [true, (exact: true) => MatchReturnType];
+type BooleanFalseCase<MatchReturnType> = [false, (exact: false) => MatchReturnType];
+
 export type Matcher<MatchType, MatchReturnType> =
     MatchType extends Maybe<string>
       ? ArrayWLast<
@@ -31,7 +34,7 @@ export type Matcher<MatchType, MatchReturnType> =
         | string[]
         | Set<string>
         | RegExp,
-        (_: string) => MatchReturnType,
+        (exact: string) => MatchReturnType,
       ],
       MatcherDefaultHandler<MatchType, MatchReturnType>
       >
@@ -47,18 +50,17 @@ export type Matcher<MatchType, MatchReturnType> =
         MatcherDefaultHandler<MatchType, MatchReturnType>
         >
         : MatchType extends boolean
-          ? (
-            ArrayWLast<(
-              [true, (exact: true) => void] |
-              [false, (exact: false) => void]
-            ), MatcherDefaultHandler<MatchType, MatchReturnType>>
-          ) | (
-            [true, (exact: true) => void] |
-            [false, (exact: false) => void]
-          )
-          : MatchType extends Maybe<boolean>
-            ? ArrayWLast<(
-              [true, (exact: true) => void] |
-              [false, (exact: false) => void]
-            ), MatcherDefaultHandler<MatchType, MatchReturnType>>
-            : never;
+          ? [
+            BooleanTrueCase<MatchReturnType>,
+            MatcherDefaultHandler<false, MatchReturnType>,
+          ] | [
+            BooleanFalseCase<MatchReturnType>,
+            MatcherDefaultHandler<true, MatchReturnType>,
+          ] | [
+            BooleanTrueCase<MatchReturnType>,
+            BooleanFalseCase<MatchReturnType>,
+          ] | [
+            BooleanFalseCase<MatchReturnType>,
+            BooleanTrueCase<MatchReturnType>,
+          ]
+          : never;
