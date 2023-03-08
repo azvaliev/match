@@ -35,6 +35,18 @@ describe('Fundamental Behavior', () => {
     expect(matchHandler).toHaveBeenCalledWith(testValue.current);
   });
 
+  it('Can match boolean', ({ expect }) => {
+    match(true, [
+      [true, matchHandler],
+      defaultHandler,
+    ]);
+
+    expect(defaultHandler).not.toHaveBeenCalled();
+
+    expect(matchHandler).toHaveBeenCalledOnce();
+    expect(matchHandler).toHaveBeenCalledWith(true);
+  });
+
   it('Executes fallback catch all when no matches', ({ expect }) => {
     match(testValue.current, [
       [getRandomString(), matchHandler],

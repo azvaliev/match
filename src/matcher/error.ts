@@ -22,6 +22,7 @@ class MatchError extends Error {
   constructor({ message, status }: { message: string, status: StatusCodes }) {
     super(message);
     this.status = status;
+    this.name = 'MatchError';
   }
 }
 
