@@ -98,6 +98,18 @@ describe('Matching strings using Regular Expressions', () => {
     expect(matchHandler).toHaveBeenCalledWith(testValue.current);
   });
 
+  it('regexp that doesn\'t match', ({ expect }) => {
+    stringMatcher(testValue.current, [
+      [/.{20000}/, matchHandler],
+      defaultHandler,
+    ]);
+
+    expect(matchHandler).not.toHaveBeenCalled();
+
+    expect(defaultHandler).toHaveBeenCalledOnce();
+    expect(defaultHandler).toHaveBeenCalledWith(testValue.current);
+  });
+
   it('full string even with capture groups', ({ expect }) => {
     const padLength = getRandomNumber({ low: 0, round: true });
     const paddedTestValue = (
@@ -176,7 +188,7 @@ describe('Bad input / Error Handling', () => {
       defaultHandler,
     ]);
 
-    expect(defaultHandler).toHaveBeenCalled();
+    expect(defaultHandler).toHaveBeenCalledOnce();
     expect(defaultHandler).toHaveBeenCalledWith(testValue.current);
   });
 });
