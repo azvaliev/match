@@ -1,7 +1,16 @@
 {
   "name": "match",
   "version": "1.0.0",
-  "description": "",
+  "description": "Rust-style pattern matching brought to TypeScript",
+  "homepage": "https://github.com/azvaliev/match#readme",
+  "bugs": {
+    "url": "https://github.com/azvaliev/match/issues",
+    "email": "azat@valievventures.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/azvaliev/match.git"
+  },
   "type": "module",
   "main": "dist/match.js",
   "module": "dist/match.mjs",
@@ -17,8 +26,8 @@
     "test:watch": "vitest --watch",
     "build": "rm -rf dist && rollup -c"
   },
-  "keywords": [],
-  "author": "Azat Valiev valiev.dev@gmail.com",
+  "keywords": ["pattern matching", "match", "control flow", "rust match"],
+  "author": "Azat Valiev <valiev.dev@gmail.com> (https://valiev.dev)",
   "license": "MIT",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.54.0",
