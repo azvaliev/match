@@ -1,29 +1,46 @@
 # Match
 
-- [Features](#features)
-- [Getting Started](#getting-started)
-- [Documentation](#documentation)
+Everything that `switch` could've been. 🚀  
+Inspired from Rust. 🦀
 
-This is `match`, a TypeScript library inspired by the `match {}` from Rust.
-I like to think of it as everything `switch` in JavaScript could've been.
-
-Hate seeing nested ternarys in your codebase? This might be just thing you need.
-
-```ts
-const myResult = match(aString, [
-  [["some_result", "another_result"], (result) => true],
-  (defaultCase) => false
-]);
+```bash
+pnpm install @azvaliev/match
 ```
 
-## Features
-- Use `switch`-like syntax without needing to only match basic cases
-- Achieve conciseness in expressions without the need for a ternary
-- Match `string` against `string[]`, `string`, `Set<string>`, or even regular expressions!
-- Match `number` with `number[]`, `number`, `Set<number>`, and ranges! (inclusive and exclusive)
-- Match `booleans` against, well, booleans. But in a more elegant syntax!
+- [Introduction](#introduction)
+- [Installation](#getting-started-installation)
+- [Basic Usage](#basic-usage)
+- [error handling]
+- [`string` matching]()
+  - [literals]()
+  - [array and Set]()
+  - [Regular Expressions]()
+- [`number` matching]()
+  - [Literals]()
+  - [Array and Set]()
+  - [Comparison - Greater Than / Less Than]()
+  - [Ranges]()
+FDFS- [`boolean` matching]()
+  - [`Literals`]
+  - [`Default Case`]
 
-## Getting Started
+### Introduction
+
+`match` is a typesafe pattern matching library, designed to make writing and reading conditional logic
+simple, concise, and extensible. You can think of it like everything `switch` could've been.
+
+Simply put, goal of this library is to make your conditional logic simpler, more typesafe, and easier
+to use.
+
+#### Side Benefits
+
+- MIT Licensed
+- Zero dependencies
+- TypeScript is optional, but well integrated
+- Works in both NodeJS and the browser
+- **Under 3kb** when minified and gzipped
+
+## Getting Started / Installation
 
 First, install with package manager of choice
 
@@ -40,32 +57,65 @@ Then, import as needed!
 ```typescript
 import { match } from '@azvaliev/match';
 
-match(myVal, [
-  // ...
+match(myString, [
+  ['hello world', () => {
+    console.log('Matched!');
+  }],
+  () => {
+    console.log('default');
+  }
 ]);
 ```
 
-## Documentation
+## Basic Usage
 
-For familiarity and a good starting point, I've tried to emulate Rust's [match](https://doc.rust-lang.org/rust-by-example/flow_control/match.html)
-API as closely as possible. However, some variance is inevitable.
+The `match` function takes two arguments, your value and an array of matchers.  
 
-The documentation should be comprehensive and without issue, please feel free to 
-[file an issue on Github](https://github.com/azvaliev/match/issues) if anything.
+Each matcher is a tuple containing a `[Pattern, MatchHandler]` except for the last value in the array which is just a `MatchHandler`,
+outside a tuple, serving as a default case.
 
-todo!
+When the first `Pattern` that matches your value is found, the corresponding `MatchHandler` will be executed.
+If none are matching, the last `MatchHandler` will executed.
 
-- [`match` fundamentals]
-- [error handling]
-- [`string` matching]()
-  - [literals]()
-  - [array and Set]()
-  - [Regular Expressions]()
-- [`number` matching]()
-  - [Literals]()
-  - [Array and Set]()
-  - [Comparison - Greater Than / Less Than]()
-  - [Ranges]()
-- [`boolean` matching]()
-  - [`Literals`]
-  - [`Default Case`]
+```typescript
+match(
+  Value, 
+  [...Array<[Pattern, MatchHandler]>, MatchHandler],
+)
+``````
+
+### `Value`
+
+`string | number | boolean`
+
+Whatever value you want to pattern match against.
+
+### `Pattern`
+
+Given a certain type for the `Value`, this shows the corresponding `Pattern` types available.
+
+**Value: `number`**
+  - `number`
+  - `Array<number>`
+  - `Set<number>`
+  - Exclusive Range* `"start..end"`
+  - Inclusive Range* `"start..=end"`
+  - Greater than `">number"`
+  - Less than `"<number"`
+
+**Value: `string`**
+  - `string`
+  - `Array<string>`
+  - `Set<string>`
+  - `RegExp`
+
+**Value: `boolean`**
+  - `true`
+  - `false`
+
+### `MatchHandler`
+
+`(val: string | number | boolean) => unknown`
+
+A callback function which recieves your value as the first and only parameter.
+It can can optionally return any value which will be passed through and returned from `match`.
