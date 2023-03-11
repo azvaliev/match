@@ -1,4 +1,4 @@
-import { Matcher } from '@app/matcher';
+import { Matcher } from '../types';
 import { getDefaultHandler } from '../utils';
 
 function booleanMatcher<

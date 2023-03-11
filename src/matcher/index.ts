@@ -3,55 +3,63 @@ import { MatchError } from './error';
 import { Matcher } from './types';
 import { booleanMatcher } from './parsers/boolean';
 
+// So I don't have to break lines manually on the docs
+/* eslint-disable max-len */
 /**
-  * Match a number using arrays, ranges, greater than or less than
-* */
-function match<
-  MatchReturnType,
->(val: number, matcherOptions: Matcher<number, MatchReturnType>): MatchReturnType;
-/**
-  * Match a string using RegExp pattern matching or literals
-* */
-function match<
-  MatchReturnType,
->(val: string, matcherOptions: Matcher<string, MatchReturnType>): MatchReturnType;
-/**
-  * Match a boolean using literals
-* */
-function match<
-  MatchReturnType,
->(val: boolean, matcherOptions: Matcher<boolean, MatchReturnType>): MatchReturnType;
+  * Match strings, numbers or booleans using a variety of methods
+  * @see {@link https://github.com/azvaliev/match Github Documentation}
+  * @param {(string | number | boolean)} value - The value you want to match against
+  * @param {(Matcher<MatchType, MatchReturnType>)} matcher - Provide an array of matchers, with the last being a default case handler function
+  *
+  * @throws MatchError on invalid input
+  * @returns {MatchReturnType} A union of the return types of your various match handler functions
+  *
+  * @example
+  * // Matching a Number
+  *
+  * match(myNum, [
+  *   ['<5', () => { console.log('the number is less than 5') }],
+  *   [5, () => { console.log('the number is five') }],
+  *   ['6..12', () => { console.log('the number is between 6 and 12') }],
+  *   () => { console.log('default case') }
+  * ]);
+  * */
 function match<
   MatchType extends string | number | boolean,
   MatchReturnType,
->(val: MatchType, matcherOptions: Matcher<MatchType, MatchReturnType>): MatchReturnType {
+>(value: MatchType, matcher: Matcher<MatchType, MatchReturnType>): MatchReturnType;
+function match<
+  MatchType extends string | number | boolean,
+  MatchReturnType,
+>(value: MatchType, matcher: Matcher<MatchType, MatchReturnType>): MatchReturnType {
+  /* eslint-enable max-len */
   // Check val type to determine matcher type to use
   // We can asset based on val type, that corresponding matcher options are valid
   // as they are based on the same generic
 
-  if (typeof val === 'string') {
+  if (typeof value === 'string') {
     return stringMatcher<MatchReturnType>(
-      val,
-      matcherOptions as Matcher<string, MatchReturnType>,
+      value,
+      matcher as Matcher<string, MatchReturnType>,
     );
   }
 
-  if (typeof val === 'number') {
+  if (typeof value === 'number') {
     return numberMatcher<MatchReturnType>(
-      val,
-      matcherOptions as Matcher<number, MatchReturnType>,
+      value,
+      matcher as Matcher<number, MatchReturnType>,
     );
   }
 
-  if (typeof val === 'boolean') {
+  if (typeof value === 'boolean') {
     return booleanMatcher<MatchReturnType>(
-      val,
-      matcherOptions as Matcher<boolean, MatchReturnType>,
+      value,
+      matcher as Matcher<boolean, MatchReturnType>,
     );
   }
 
   throw new MatchError({
-    message: `Unable to match type ${typeof val}`,
+    message: `Unable to match type ${typeof value}`,
     status: MatchError.StatusCodes.UNSUPPORTED_TYPE,
   });
 }

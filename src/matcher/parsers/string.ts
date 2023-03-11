@@ -1,5 +1,5 @@
-import type { Matcher } from '@app/matcher';
-import { getDefaultHandler } from '@app/matcher/utils';
+import type { Matcher } from '../types';
+import { getDefaultHandler } from '../utils';
 
 function stringMatcher<
   MatchReturnType,

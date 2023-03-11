@@ -1,6 +1,6 @@
-import type { Matcher, MatchNumberComparison } from '@app/matcher';
-import { MatchError } from '@app/matcher/error';
-import { getDefaultHandler } from '@app/matcher/utils';
+import type { Matcher, MatchNumberComparison } from '../types';
+import { MatchError } from '../error';
+import { getDefaultHandler } from '../utils';
 
 function numberMatcher<
   MatchReturnType,
