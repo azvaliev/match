@@ -15,7 +15,7 @@
     "test:coverage": "vitest --coverage",
     "test:ui": "vitest --ui --watch",
     "test:watch": "vitest --watch",
-    "build": "rollup -c"
+    "build": "rm -rf dist && rollup -c"
   },
   "keywords": [],
   "author": "Azat Valiev valiev.dev@gmail.com",
