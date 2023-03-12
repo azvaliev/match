@@ -9,20 +9,26 @@ pnpm install @azvaliev/match
 
 - [Introduction](#introduction)
 - [Installation](#getting-started-installation)
-- [Basic Usage](#basic-usage)
-- [error handling]
+- [`match()`](#basic-usage)
+  - [`Value`](#value)
+  - [`Pattern`](#pattern)
+  - [`MatchHandler`](#matchhandler)
+- [Return Values](#return-values)
+- [Error Handling](#error-handling)
+  - [Philosophy](#philosophy)
+  - [`MatchError`](#matcherror)
 - [`string` matching]()
-  - [literals]()
-  - [array and Set]()
+  - [Literals]()
+  - [Array and Set]()
   - [Regular Expressions]()
 - [`number` matching]()
   - [Literals]()
   - [Array and Set]()
-  - [Comparison - Greater Than / Less Than]()
+  - [Greater Than / Less Than]()
   - [Ranges]()
-FDFS- [`boolean` matching]()
-  - [`Literals`]
-  - [`Default Case`]
+- [`boolean` matching]()
+  - [Literals]()
+  - [Default Case]()
 
 ### Introduction
 
@@ -113,9 +119,70 @@ Given a certain type for the `Value`, this shows the corresponding `Pattern` typ
   - `true`
   - `false`
 
+\* exclusive range meaning the high number is **not included**,
+inclusve range meaning the high number **is included**
+
 ### `MatchHandler`
 
 `(val: string | number | boolean) => unknown`
 
 A callback function which recieves your value as the first and only parameter.
 It can can optionally return any value which will be passed through and returned from `match`.
+
+## Return Values
+
+The return type from `match()` is a union of all its different `MatchHandler` return types.
+
+```typescript
+const result = match(someString, [
+  // first MatchHandler returns 'a'
+  ['foo', () => 'a'],
+
+  // second MatchHandler returns 'b' 
+  ['bar', () => 'b'],
+
+  // default case MatchHandler returns 'c'
+  () => 'c'
+]);
+
+result; // 'a' | 'b' | 'c'
+```
+
+Should TypeScript fail to infer the return type properly (or not specific enough), you can also specify this 
+explicitly in the generic constraint.
+
+```typescript
+// TypeScript will still validate this generic constraint is met,
+// via the return types of your MatchHandler(s)
+const result = match<string, 'x' | 'y' | 'z'>(someString, [/* ... */]);
+
+result; // 'x' | 'y' | 'z'
+```
+
+## Error Handling
+
+### Philosophy
+
+Generally, `match` will not throw exceptions, and prefer logging them under `console.error`.
+There are two main reasons that `match` will throw an exception for.
+
+1. Missing a default case handler. TypeScript **will** warn you about this.
+The default case handler is required, even if it's just an empty function.
+2. Unsupported type supplied. `match` only works with strings, numbers, and booleans as of this time.
+Expect supplying any other types to throw an error.
+
+### `MatchError`
+
+`match` will only ever throw errors that are instances of `MatchError`. An error can be easily identified by checking
+it's `status` property.
+
+```typescript
+try {
+  match(someValue, [/* ... */])
+} catch (err) {
+  if (err instanceof MatchError) {
+    err.name; // "MatchError"
+    err.status; // member of enum MatchError.StatusCodes
+  }
+}
+```
