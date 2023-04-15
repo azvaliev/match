@@ -30,10 +30,12 @@ export type Matcher<MatchType, MatchReturnType> =
     MatchType extends Maybe<string>
       ? ArrayWLast<
       [
-        | string
-        | string[]
-        | Set<string>
-        | RegExp,
+        Maybe<
+          | string
+          | string[]
+          | Set<string>
+          | RegExp
+        >,
         (exact: string) => MatchReturnType,
       ],
       MatcherDefaultHandler<MatchType, MatchReturnType>
@@ -41,10 +43,12 @@ export type Matcher<MatchType, MatchReturnType> =
       : MatchType extends Maybe<number>
         ? ArrayWLast<
         [
-          | number
-          | number[]
-          | Set<number>
-          | MatchNumberComparison,
+          Maybe<
+            | number
+            | number[]
+            | Set<number>
+            | MatchNumberComparison
+          >,
           (exact: number) => MatchReturnType,
         ],
         MatcherDefaultHandler<MatchType, MatchReturnType>

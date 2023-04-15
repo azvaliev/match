@@ -2,6 +2,7 @@ import { numberMatcher, stringMatcher } from './parsers';
 import { MatchError } from './error';
 import { Matcher } from './types';
 import { booleanMatcher } from './parsers/boolean';
+import { getDefaultHandler } from './utils';
 
 // So I don't have to break lines manually on the docs
 /* eslint-disable max-len */
@@ -25,11 +26,11 @@ import { booleanMatcher } from './parsers/boolean';
   * ]);
   * */
 function match<
-  MatchType extends string | number | boolean,
+  MatchType extends string | number | boolean | null | undefined,
   MatchReturnType,
 >(value: MatchType, matcher: Matcher<MatchType, MatchReturnType>): MatchReturnType;
 function match<
-  MatchType extends string | number | boolean,
+  MatchType extends string | number | boolean | null | undefined,
   MatchReturnType,
 >(value: MatchType, matcher: Matcher<MatchType, MatchReturnType>): MatchReturnType {
   /* eslint-enable max-len */
@@ -37,31 +38,33 @@ function match<
   // We can asset based on val type, that corresponding matcher options are valid
   // as they are based on the same generic
 
-  if (typeof value === 'string') {
-    return stringMatcher<MatchReturnType>(
-      value,
-      matcher as Matcher<string, MatchReturnType>,
-    );
+  try {
+    if (typeof value === 'string') {
+      return stringMatcher<MatchReturnType>(
+        value,
+        matcher as Matcher<string, MatchReturnType>,
+      );
+    }
+
+    if (typeof value === 'number') {
+      return numberMatcher<MatchReturnType>(
+        value,
+        matcher as Matcher<number, MatchReturnType>,
+      );
+    }
+
+    if (typeof value === 'boolean') {
+      return booleanMatcher<MatchReturnType>(
+        value,
+        matcher as Matcher<boolean, MatchReturnType>,
+      );
+    }
+  } catch (err) {
+    console.error(err);
   }
 
-  if (typeof value === 'number') {
-    return numberMatcher<MatchReturnType>(
-      value,
-      matcher as Matcher<number, MatchReturnType>,
-    );
-  }
-
-  if (typeof value === 'boolean') {
-    return booleanMatcher<MatchReturnType>(
-      value,
-      matcher as Matcher<boolean, MatchReturnType>,
-    );
-  }
-
-  throw new MatchError({
-    message: `Unable to match type ${typeof value}`,
-    status: MatchError.StatusCodes.UNSUPPORTED_TYPE,
-  });
+  const defaultHandler = getDefaultHandler<typeof value, MatchReturnType>(matcher);
+  return defaultHandler(value);
 }
 
 export * from './types';
