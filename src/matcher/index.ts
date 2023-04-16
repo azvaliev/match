@@ -1,5 +1,4 @@
 import { numberMatcher, stringMatcher } from './parsers';
-import { MatchError } from './error';
 import { Matcher } from './types';
 import { booleanMatcher } from './parsers/boolean';
 import { getDefaultHandler } from './utils';

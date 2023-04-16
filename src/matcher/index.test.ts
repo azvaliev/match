@@ -90,14 +90,14 @@ describe('Fundamental Behavior', () => {
     expect(res).toBe(expectedReturnValue);
   });
 
-  for (const nullOrUndefined of [null, undefined]) {
+  [null, undefined].forEach((nullOrUndefined) => {
     it(`runs default case with ${nullOrUndefined}`, ({ expect }) => {
       const expectedReturnValue = testValue.current;
       defaultHandler.mockReturnValueOnce(expectedReturnValue);
 
       const res = match(nullOrUndefined, [
         [testValue.current, () => 'invalid!'],
-        defaultHandler
+        defaultHandler,
       ]);
 
       expect(matchHandler).not.toHaveBeenCalled();
@@ -106,8 +106,8 @@ describe('Fundamental Behavior', () => {
       expect(defaultHandler).toHaveBeenCalledWith(nullOrUndefined);
 
       expect(res).toBe(expectedReturnValue);
-    })
-  }
+    });
+  });
 });
 
 describe('Throws the correct errors with invalid arguments', () => {
