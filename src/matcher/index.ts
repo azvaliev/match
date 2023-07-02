@@ -1,14 +1,15 @@
 import { numberMatcher, stringMatcher } from './parsers';
-import { MatchError } from './error';
 import { Matcher } from './types';
 import { booleanMatcher } from './parsers/boolean';
+import { getDefaultHandler } from './utils';
+import { valueMatcher } from './parsers/value';
 
 // So I don't have to break lines manually on the docs
 /* eslint-disable max-len */
 /**
   * Match strings, numbers or booleans using a variety of methods
   * @see {@link https://github.com/azvaliev/match Github Documentation}
-  * @param {(string | number | boolean)} value - The value you want to match against
+  * @param {(string | number | boolean | null | undefined)} value - The value you want to match against
   * @param {(Matcher<MatchType, MatchReturnType>)} matcher - Provide an array of matchers, with the last being a default case handler function
   *
   * @throws MatchError on invalid input
@@ -25,11 +26,11 @@ import { booleanMatcher } from './parsers/boolean';
   * ]);
   * */
 function match<
-  MatchType extends string | number | boolean,
+  MatchType extends string | number | boolean | null | undefined,
   MatchReturnType,
 >(value: MatchType, matcher: Matcher<MatchType, MatchReturnType>): MatchReturnType;
 function match<
-  MatchType extends string | number | boolean,
+  MatchType extends string | number | boolean | null | undefined,
   MatchReturnType,
 >(value: MatchType, matcher: Matcher<MatchType, MatchReturnType>): MatchReturnType {
   /* eslint-enable max-len */
@@ -37,31 +38,40 @@ function match<
   // We can asset based on val type, that corresponding matcher options are valid
   // as they are based on the same generic
 
-  if (typeof value === 'string') {
-    return stringMatcher<MatchReturnType>(
+  try {
+    if (typeof value === 'string') {
+      return stringMatcher<MatchReturnType>(
+        value,
+        matcher as Matcher<string, MatchReturnType>,
+      );
+    }
+
+    if (typeof value === 'number') {
+      return numberMatcher<MatchReturnType>(
+        value,
+        matcher as Matcher<number, MatchReturnType>,
+      );
+    }
+
+    if (typeof value === 'boolean') {
+      return booleanMatcher<MatchReturnType>(
+        value,
+        matcher as Matcher<boolean, MatchReturnType>,
+      );
+    }
+  } catch (err) {
+    console.error(err);
+  }
+
+  if (value === null || value === undefined) {
+    return valueMatcher<MatchReturnType>(
       value,
-      matcher as Matcher<string, MatchReturnType>,
+      matcher,
     );
   }
 
-  if (typeof value === 'number') {
-    return numberMatcher<MatchReturnType>(
-      value,
-      matcher as Matcher<number, MatchReturnType>,
-    );
-  }
-
-  if (typeof value === 'boolean') {
-    return booleanMatcher<MatchReturnType>(
-      value,
-      matcher as Matcher<boolean, MatchReturnType>,
-    );
-  }
-
-  throw new MatchError({
-    message: `Unable to match type ${typeof value}`,
-    status: MatchError.StatusCodes.UNSUPPORTED_TYPE,
-  });
+  const defaultHandler = getDefaultHandler<typeof value, MatchReturnType>(matcher);
+  return defaultHandler(value);
 }
 
 export * from './types';

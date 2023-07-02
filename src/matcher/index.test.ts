@@ -89,10 +89,46 @@ describe('Fundamental Behavior', () => {
 
     expect(res).toBe(expectedReturnValue);
   });
+
+  [null, undefined].forEach((nullOrUndefined) => {
+    it(`can match ${nullOrUndefined}`, ({ expect }) => {
+      const expectedReturnValue = [nullOrUndefined, getRandomString()];
+      matchHandler.mockReturnValueOnce(expectedReturnValue);
+
+      const res = match(nullOrUndefined, [
+        [nullOrUndefined, matchHandler],
+        defaultHandler,
+      ]);
+
+      expect(defaultHandler).not.toHaveBeenCalled();
+
+      expect(matchHandler).toHaveBeenCalledOnce();
+      expect(matchHandler).toHaveBeenCalledWith(nullOrUndefined);
+
+      expect(res).toBe(expectedReturnValue);
+    });
+
+    it(`runs default case with ${nullOrUndefined}`, ({ expect }) => {
+      const expectedReturnValue = testValue.current;
+      defaultHandler.mockReturnValueOnce(expectedReturnValue);
+
+      const res = match(nullOrUndefined, [
+        [testValue.current, () => 'invalid!'],
+        defaultHandler,
+      ]);
+
+      expect(matchHandler).not.toHaveBeenCalled();
+
+      expect(defaultHandler).toHaveBeenCalledOnce();
+      expect(defaultHandler).toHaveBeenCalledWith(nullOrUndefined);
+
+      expect(res).toBe(expectedReturnValue);
+    });
+  });
 });
 
 describe('Throws the correct errors with invalid arguments', () => {
-  it('UNSUPPORTED_TYPE error when undefined required arguments are passed in', ({ expect }) => {
+  it('MISSING_DEFAULT_HANDLER error when undefined required arguments are passed in', ({ expect }) => {
     let error: MatchError | undefined;
 
     try {
@@ -106,7 +142,7 @@ describe('Throws the correct errors with invalid arguments', () => {
 
     expect(error).toBeDefined();
     expect(error?.message).toBeDefined();
-    expect(error?.status).toBe(MatchError.StatusCodes.UNSUPPORTED_TYPE);
+    expect(error?.status).toBe(MatchError.StatusCodes.MISSING_DEFAULT_HANDLER);
   });
 
   const {

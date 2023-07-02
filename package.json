@@ -19,14 +19,19 @@
     "/dist"
   ],
   "scripts": {
-    "lint": "eslint . --config .eslintrc.yaml --ext .js,.ts",
+    "lint": "eslint . --config .eslintrc.cjs --ext .js,.ts",
     "test": "vitest",
     "test:coverage": "vitest --coverage",
     "test:ui": "vitest --ui --watch",
     "test:watch": "vitest --watch",
     "build": "rm -rf dist && rollup -c"
   },
-  "keywords": ["pattern matching", "match", "control flow", "rust match"],
+  "keywords": [
+    "pattern matching",
+    "match",
+    "control flow",
+    "rust match"
+  ],
   "author": "Azat Valiev <valiev.dev@gmail.com> (https://valiev.dev)",
   "license": "MIT",
   "devDependencies": {
