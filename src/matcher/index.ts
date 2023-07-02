@@ -2,13 +2,14 @@ import { numberMatcher, stringMatcher } from './parsers';
 import { Matcher } from './types';
 import { booleanMatcher } from './parsers/boolean';
 import { getDefaultHandler } from './utils';
+import { valueMatcher } from './parsers/value';
 
 // So I don't have to break lines manually on the docs
 /* eslint-disable max-len */
 /**
   * Match strings, numbers or booleans using a variety of methods
   * @see {@link https://github.com/azvaliev/match Github Documentation}
-  * @param {(string | number | boolean)} value - The value you want to match against
+  * @param {(string | number | boolean | null | undefined)} value - The value you want to match against
   * @param {(Matcher<MatchType, MatchReturnType>)} matcher - Provide an array of matchers, with the last being a default case handler function
   *
   * @throws MatchError on invalid input
@@ -60,6 +61,13 @@ function match<
     }
   } catch (err) {
     console.error(err);
+  }
+
+  if (value === null || value === undefined) {
+    return valueMatcher<MatchReturnType>(
+      value,
+      matcher,
+    );
   }
 
   const defaultHandler = getDefaultHandler<typeof value, MatchReturnType>(matcher);

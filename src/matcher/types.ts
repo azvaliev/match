@@ -67,4 +67,7 @@ export type Matcher<MatchType, MatchReturnType> =
             BooleanFalseCase<MatchReturnType>,
             BooleanTrueCase<MatchReturnType>,
           ]
-          : never;
+          : ArrayWLast<
+          [unknown, (exact: unknown) => MatchReturnType],
+          MatcherDefaultHandler<MatchType, MatchReturnType>
+          >;

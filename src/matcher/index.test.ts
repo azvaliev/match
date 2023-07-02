@@ -91,6 +91,23 @@ describe('Fundamental Behavior', () => {
   });
 
   [null, undefined].forEach((nullOrUndefined) => {
+    it(`can match ${nullOrUndefined}`, ({ expect }) => {
+      const expectedReturnValue = [nullOrUndefined, getRandomString()];
+      matchHandler.mockReturnValueOnce(expectedReturnValue);
+
+      const res = match(nullOrUndefined, [
+        [nullOrUndefined, matchHandler],
+        defaultHandler,
+      ]);
+
+      expect(defaultHandler).not.toHaveBeenCalled();
+
+      expect(matchHandler).toHaveBeenCalledOnce();
+      expect(matchHandler).toHaveBeenCalledWith(nullOrUndefined);
+
+      expect(res).toBe(expectedReturnValue);
+    });
+
     it(`runs default case with ${nullOrUndefined}`, ({ expect }) => {
       const expectedReturnValue = testValue.current;
       defaultHandler.mockReturnValueOnce(expectedReturnValue);
