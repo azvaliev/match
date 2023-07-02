@@ -66,7 +66,7 @@ function match<
   if (value === null || value === undefined) {
     return valueMatcher<MatchReturnType>(
       value,
-      matcher,
+      matcher as Matcher<unknown, MatchReturnType>,
     );
   }
 
