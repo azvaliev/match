@@ -5,24 +5,25 @@ on:
     types: [published]
 
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       # Setup .npmrc file to publish to npm
-      - uses: actions/setup-node@v3
+      - name: setup node
+        uses: actions/setup-node@v3
         with:
           node-version: '18.x'
           registry-url: 'https://registry.npmjs.org'
 
       - uses: pnpm/action-setup@v2
-        name: Install pnpm
+        name: install pnpm
         id: pnpm-install
         with:
           version: 8
           run_install: false
       
-      - name: Get pnpm store directory
+      - name: get pnpm store directory
         id: pnpm-cache
         shell: bash
         run: |
@@ -36,9 +37,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
-      - run: pnpm install --frozen-lockfile
+      - name: install
+        run: pnpm install --frozen-lockfile
 
-      - run: pnpm publish
+      - name: build
+        run: pnpm run build
+
+      - name: publish
+        run: pnpm publish --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
