@@ -17,18 +17,6 @@ pnpm install @azvaliev/match
 - [Error Handling](#error-handling)
   - [Philosophy](#philosophy)
   - [`MatchError`](#matcherror)
-- [`string` matching]()
-  - [Literals]()
-  - [Array and Set]()
-  - [Regular Expressions]()
-- [`number` matching]()
-  - [Literals]()
-  - [Array and Set]()
-  - [Greater Than / Less Than]()
-  - [Ranges]()
-- [`boolean` matching]()
-  - [Literals]()
-  - [Default Case]()
 
 ### Introduction
 

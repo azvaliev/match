@@ -1,6 +1,6 @@
 {
-  "name": "match",
-  "version": "1.0.0",
+  "name": "@azvaliev/match",
+  "version": "0.1.1",
   "description": "Rust-style pattern matching brought to TypeScript",
   "homepage": "https://github.com/azvaliev/match#readme",
   "bugs": {
